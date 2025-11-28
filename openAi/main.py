@@ -1,16 +1,15 @@
-from bytez import Bytez
+from openai import OpenAI
 from dotenv import dotenv_values
-import os
 
 config = dotenv_values(".env")
 
-api_key = config["OPEN_AI_API_KEY"]
+client = OpenAI(
+    api_key=config["API_KEY"],
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+)
 
-sdk = Bytez(api_key)
+response = client.chat.completions.create(
+    model="gemini-2.5-flash", messages=[{"role": "user", "content": "codeperia search google"}]
+)
 
-model = sdk.model("openai/gpt-4.1")
-
-response = model.run([{"role": "user", "content": "HI FRIEND"}])
-
-print(response.output["content"])
-
+print(response.choices[0].message.content)
